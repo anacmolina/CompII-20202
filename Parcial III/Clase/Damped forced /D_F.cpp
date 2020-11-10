@@ -66,7 +66,7 @@ int main()
 
         vector<double> W;
         W=ejercicio1.initialize_W();
-        ejercicio1.do_while(title1);
+        ejercicio1.do_while(title1, pow(10, -4));
     }    
     return 0;
    
