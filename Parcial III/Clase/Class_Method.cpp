@@ -1,0 +1,262 @@
+//================================================                                                                 
+// Construccion de la clase. Diferencia finitas  |
+// Metodos                                     |
+//                                               |                                                                 
+// Ana Cristina Molina                           |                                                                 
+// Andres Arteaga                                |                                                                 
+//                                               |                                                                 
+// Update: 10 de noviembre de 2020               |                                                                 
+//================================================ 
+
+#include "Class_Method.h"
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+
+// Constructor
+DiferenciasFinitas::DiferenciasFinitas( const double a_, const double b_, const double alpha_, const double beta_, const int N_, function<double(double, double, double)> f_, function<double(double, double, double)> fy_, function<double(double, double, double)> fyp_)
+                :a(a_), b(b_), alpha(alpha_), beta(beta_), N(N_)
+
+{
+    f=f_;
+    fy=fy_;
+    fyp=fyp_;
+    a=a_;
+    b=b_;
+    N=N_;
+    h=(b_- a_)/(N_+1.0);
+}
+
+// Fijar y llamar valores, uso de las funciones
+void DiferenciasFinitas::set_a (const double a_)
+{
+    a = a_;
+}
+double DiferenciasFinitas::get_a () const
+{
+    return a;
+}
+
+void DiferenciasFinitas::set_b ( const double b_)
+{
+    b = b_;
+}
+double DiferenciasFinitas::get_b () const
+{
+    return b;
+}
+
+void DiferenciasFinitas::set_alpha ( const double alpha_ )
+{
+    alpha = alpha_;
+}
+
+double DiferenciasFinitas::get_alpha () const
+{
+    return alpha;
+}
+
+void DiferenciasFinitas::set_beta ( const double beta_)
+{
+    beta = beta_;
+}
+double DiferenciasFinitas::get_beta () const
+{
+    return beta;
+}
+
+void DiferenciasFinitas::set_N ( const double N_)
+{
+    N = N_;
+}
+
+double DiferenciasFinitas::get_N () const
+{
+    return N;
+}
+
+void DiferenciasFinitas::set_f (function<double(double, double, double)>& f_)
+{
+    f = f_;
+}
+
+double DiferenciasFinitas::call_f ( double x, double y, double yp)
+{
+    return f(x, y, yp);
+}
+
+void DiferenciasFinitas::set_fy (function<double(double, double, double)>& fy_)
+{
+    fy = fy_;
+}
+
+double DiferenciasFinitas::call_fy ( double x, double y, double yp)
+{
+    return fy(x, y, yp);
+}
+
+void DiferenciasFinitas::set_fyp (function<double(double, double, double)>& fyp_)
+{
+    fyp = fyp_;
+}
+
+double DiferenciasFinitas::call_fyp ( double x, double y, double yp)
+{
+    return fyp(x, y, yp);
+}
+
+
+double DiferenciasFinitas::get_h()
+{
+    return h;
+}
+
+void DiferenciasFinitas::set_W (vector<double> W_)
+{
+    W=W_;
+}
+
+vector<double> DiferenciasFinitas::get_W ()
+{
+    return W;
+}
+
+// Inicializar w
+vector<double> DiferenciasFinitas::initialize_W()
+{
+    
+    double w0=alpha, wNp1=beta;
+    W.push_back(w0);
+    for (int i=1; i<=N; i++) {W.push_back(alpha + i*h*(beta-alpha)/(b-a));}
+    W.push_back(wNp1);
+
+    return W;
+}
+
+// Metodo de diferencias finitas ODE no lineales
+void DiferenciasFinitas::do_while( string title, double TOL_)
+{
+  // Definicion de los ciclos
+    int k=1, M=300;
+    double TOL = TOL_; // Fijar tolerancia
+
+    while(k<=M)
+    {
+      // Calculos de los coeficientes de la matriz Jacobiana y F 
+        double x, t;
+
+        x = a + h;
+        t = (W[2] - alpha)/(2*h);
+      
+        vector<double> A, B, C, D;
+
+        A.push_back( 2.0 + pow(h, 2.0)*fy(x, W[1], t) );
+        B.push_back( -1.0 + (h/2.0)*fyp(x, W[1], t) );
+        C.push_back( 0.0 );
+        D.push_back( -(2.0*W[1] - W[2] - alpha + pow(h, 2.0)*f(x, W[1], t)) );
+
+
+        for(int i=2; i<=N-1; i++)
+	    {
+	      x = a + i*h;
+	      t = (W[i+1] - W[i-1])/(2*h);
+
+	      A.push_back( 2.0 + pow(h, 2.0)*fy(x, W[i], t) );
+	      B.push_back( -1.0 + (h/2.0)*fyp(x, W[i], t) );
+	      C.push_back( -1.0 - (h/2.0)*fyp(x, W[i], t) );
+	      D.push_back( -(2.0*W[i] - W[i+1] - W[i-1] + pow(h, 2.0)*f(x, W[i], t)) );
+	    }
+
+        x = b - h;
+        t = (beta - W[N-1])/(2*h);
+      
+        A.push_back( 2.0 + pow(h, 2.0)*fy(x, W[N], t) );
+        B.push_back( 0.0 );
+        C.push_back( -1.0 + (h/2.0)*fyp(x, W[N], t) );    
+        D.push_back( -(2.0*W[N] - W[N-1] - beta + pow(h, 2.0)*f(x, W[N], t)) );
+
+	// Solucion al sistema de ecuaciones
+ 
+        vector<double> L, U, Z;
+
+        L.push_back(A[0]);
+        U.push_back(B[0]/A[0]);
+        Z.push_back(D[0]/L[0]);
+
+        for(int i=1; i<=N-2; i++)
+	    {
+	      L.push_back(A[i] - C[i]*U[i-1]);
+	      U.push_back(B[i]/L[i]);
+	      Z.push_back((D[i]-C[i]*Z[i-1])/L[i]);
+	    }
+
+        L.push_back(A[N-1] - C[N-1]*U[N-2]);
+        U.push_back(0.0);
+        Z.push_back((D[N-1]-C[N-1]*Z[N-2])/L[N-1]);
+
+	// Calculo de magnitud v para determinar la convergencia en M o menos iteraciones
+	
+        vector<double> v (N+1);
+
+        v.at(N) = Z[N-1];
+
+        W[N] = W[N] + v[N];
+
+        for (int i=N-1; i>=1; i--)
+	    {
+	        v.at(i) = Z[i-1] - U[i-1]*v[i+1];
+	        W[i] = W[i] + v[i];
+	    }
+
+        A.clear(); B.clear(); C.clear(); D.clear();
+	L.clear(); U.clear(); Z.clear();
+
+        double s_v=0;
+      
+        for (int i=1; i<v.size(); i++)
+	    {
+
+	        s_v = s_v + v[i]*v[i];
+	    }
+
+        double norm_v = sqrt(s_v);
+
+	cout << "iter: "<< k << "\t \t" << norm_v << endl;
+
+	// Salida de datos si el proceso fue exitoso
+        if(norm_v<=TOL)
+	    {
+            ofstream file;
+            file.open(title);
+	        for(int i=0; i<=N+1; i++)
+	        {
+	            x = a + i*h;
+	            file << x << "\t" << W[i] << endl;
+	        }
+            file.close();
+	    cout << "Converge! Procedimiento exitoso." <<  endl;
+	    k=M+1;
+	    }
+        else
+	    {
+	      k++;
+
+	      // Aviso de no convergencia
+	      if(k>M)
+		{
+		  cout << "Iteraciones excedidas. Procedimiento fallido." <<  endl;
+		}
+	      
+	    }
+
+    }
+}
+
+
+
+
+
+
+
+
