@@ -1,0 +1,1 @@
+g++ ../Class_Method.cpp D_F.cpp -o D_F.out
