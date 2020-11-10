@@ -1,0 +1,1 @@
+g++ Class_Method.cpp Class_Method_main.cpp -o Class.out
