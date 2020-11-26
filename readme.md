@@ -17,12 +17,10 @@ g++ file.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
 ### Compilacion del código
 
-_Las carpetas (Juego con clases y Juego sin clases) tiene archivos en formato bash para compilar los códigos.
-
 ```
 bash compilar.sh
 ```
-## Para ejecutar el código 
+### Para ejecutar el código 
 
 ```
 ./a.out
