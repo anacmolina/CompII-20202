@@ -1,6 +1,6 @@
-# Título del Proyecto
+# Proyecto - Juego de Tetris C++
 
-_Acá va un párrafo que describa lo que es el proyecto_
+Juego de tetris usando la librería SFML en C++. Con y sin clases.
 
 ## Comenzando 🚀
 
