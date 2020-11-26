@@ -17,6 +17,8 @@ g++ file.cpp -lsfml-graphics -lsfml-window -lsfml-system
 
 ### Compilacion del código
 
+Las carpetas Juego_sin_clases y Juego_con_clases tienen sus archivos para ser compilados.
+
 ```
 bash compilar.sh
 ```
