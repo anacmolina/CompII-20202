@@ -2,7 +2,7 @@
 
 Juego de tetris usando la librería SFML en C++. Con y sin clases.
 
-## Comenzando 🚀
+## Instalación de la librería SFLM 🚀
 
 _Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
 
