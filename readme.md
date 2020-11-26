@@ -2,55 +2,28 @@
 
 Juego de tetris usando la librería SFML en C++. Con y sin clases.
 
-## Instalación de la librería SFLM 🚀
+## Instalación de la librería SFLM 
 
-_Estas instrucciones te permitirán obtener una copia del proyecto en funcionamiento en tu máquina local para propósitos de desarrollo y pruebas._
-
-Mira **Deployment** para conocer como desplegar el proyecto.
-
-
-### Pre-requisitos 📋
-
-_Que cosas necesitas para instalar el software y como instalarlas_
+### Ubuntu 18.04 LTS
 
 ```
-Da un ejemplo
+sudo apt-get install libsfml-dev
 ```
 
-### Instalación 🔧
-
-_Una serie de ejemplos paso a paso que te dice lo que debes ejecutar para tener un entorno de desarrollo ejecutandose_
-
-_Dí cómo será ese paso_
-
+### Compilacion del librería
 ```
-Da un ejemplo
+g++ file.cpp -lsfml-graphics -lsfml-window -lsfml-system
 ```
 
-_Y repite_
+### Compilacion del código
+
+_Las carpetas (Juego con clases y Juego sin clases) tiene archivos en formato bash para compilar los códigos.
 
 ```
-hasta finalizar
+bash compilar.sh
 ```
-
-_Finaliza con un ejemplo de cómo obtener datos del sistema o como usarlos para una pequeña demo_
-
-## Ejecutando las pruebas ⚙️
-
-_Explica como ejecutar las pruebas automatizadas para este sistema_
-
-### Analice las pruebas end-to-end 🔩
-
-_Explica que verifican estas pruebas y por qué_
+## Para ejecutar el código 
 
 ```
-Da un ejemplo
-```
-
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
+./a.out
 ```
