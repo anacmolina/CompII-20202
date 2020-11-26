@@ -24,7 +24,8 @@ Tetris::Tetris()
 
 void Tetris::create_window()
 {
-  //int posx = x_set;
+  srand(time(NULL));
+  
   dx = 0, dy = 0, rotate = 0;  // Inicializar traslacion y rotacion                                  
   float timer = 0, delay = 0.5;    // Contador y tiempo de caida entre fila y fila 
   
